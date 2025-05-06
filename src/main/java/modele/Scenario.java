@@ -43,6 +43,11 @@ public class Scenario {
         }
     }
 
+    public ArrayList<String> trouverItineraire() {
+        ArrayList<String> liste = new ArrayList<>();
+        return liste;
+    }
+
     public HashSet<Utilisateur> getChUtilisateurs() {
         return chUtilisateurs;
     }

@@ -8,6 +8,8 @@ import java.util.TreeSet;
 public class Digraphe {
     private TreeMap<Integer, Set<Integer>> chVoisinsSortants;
 
+
+    //adapter la classe avec des str + rajouter les dedoublements
     public Digraphe(int [][] parVoisinsSortants) {
         chVoisinsSortants = new TreeMap<>();
         for (int indice_sommet = 0; indice_sommet < parVoisinsSortants.length; indice_sommet++) {

@@ -3,10 +3,12 @@ package modele;
 import java.util.TreeMap;
 
 public class Ville {
+    private String chDedoublement;
     private String chNom;
     private TreeMap<String, Integer> chDistances;
 
     public Ville(String parNom) {
+        chDedoublement = parNom + "2";
         chNom = parNom;
         chDistances = new TreeMap<>();
     }

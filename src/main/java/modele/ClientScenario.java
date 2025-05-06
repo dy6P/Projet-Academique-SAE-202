@@ -29,7 +29,7 @@ public class ClientScenario {
             s0.ajouterCommandes(correspondances.get("s0"));
             System.out.println(s0);
         } catch (FileNotFoundException parException) {
-            System.out.println("Erreur lors de la lecture.");
+            System.out.println("Erreur lors de la lecture du fichier text.");
             parException.printStackTrace();
         }
     }
