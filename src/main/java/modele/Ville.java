@@ -3,12 +3,10 @@ package modele;
 import java.util.TreeMap;
 
 public class Ville {
-    private String chDedoublement;
     private String chNom;
     private TreeMap<String, Integer> chDistances;
 
     public Ville(String parNom) {
-        chDedoublement = parNom + "2";
         chNom = parNom;
         chDistances = new TreeMap<>();
     }
@@ -28,7 +26,9 @@ public class Ville {
     public String toString() {
         String resultat = "";
         for (String key : chDistances.keySet()) {
-            resultat += chNom + "est à une distance de " + chDistances.get(key) + " km de " + key + "\n";
+            if (chNom.split(" ")[1].equals("-")) {
+                resultat += chNom.split(" ")[0] + "est à une distance de " + chDistances.get(key) + " km de " + key + "\n";
+            }
         }
         return resultat;
     }

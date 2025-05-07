@@ -1,18 +1,15 @@
 package modele;
 
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Digraphe {
     private TreeMap<Integer, Set<Integer>> chVoisinsSortants;
 
 
-    //adapter la classe avec des str + rajouter les dedoublements
-    public Digraphe(int [][] parVoisinsSortants) {
+    //adapter la classe avec des str + rajouter les doubles
+    public Digraphe(HashSet<Utilisateur> parVoisinsSortants) {
         chVoisinsSortants = new TreeMap<>();
-        for (int indice_sommet = 0; indice_sommet < parVoisinsSortants.length; indice_sommet++) {
+        for (int indice_sommet = 0; indice_sommet < parVoisinsSortants.size(); indice_sommet++) {
             chVoisinsSortants.put(indice_sommet, new TreeSet<>());
             for (int voisinSortant : parVoisinsSortants[indice_sommet]) {
                 chVoisinsSortants.get(indice_sommet).add(voisinSortant);
