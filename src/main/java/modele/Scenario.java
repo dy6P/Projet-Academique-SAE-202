@@ -47,21 +47,17 @@ public class Scenario {
 
     public ArrayList<String> trouverChemin() {
         ArrayList<String> chemin = new ArrayList<>();
-        HashMap<Ville, HashMap<Ville, Integer>> voisinsSortants = new HashMap<>();
+        ArrayList<Ville> villes = new ArrayList<>();
         chVilles.get("Velizy").setChVenteTrue(); // On doit commencer à Vélizy (V+)
         chVilles.get("Velizy").setChAchatTrue(); // On doit finir à Vélizy (V-)
-        voisinsSortants.put(chVilles.get("Velizy"), new HashMap<>());
+        villes.add(chVilles.get("Velizy"));
         for (Commande commande : chCommandes) {
             commande.getChVendeur().getChVille().setChVenteTrue();
             commande.getChAcheteur().getChVille().setChAchatTrue();
-            voisinsSortants.put(commande.getChVendeur().getChVille(), new HashMap<>());
-            voisinsSortants.put(commande.getChAcheteur().getChVille(), new HashMap<>());
+            villes.add(commande.getChVendeur().getChVille());
+            villes.add(commande.getChAcheteur().getChVille());
         }
-        for (Ville ville : voisinsSortants.keySet()) {
-            for (Ville voisin : voisinsSortants.keySet()) {
-                voisinsSortants.get(ville).put(voisin, ville.getDistances().get(voisin));
-            }
-        }
+        Digraphe d = new Digraphe(villes);
         return d.triTopologique();
     }
 

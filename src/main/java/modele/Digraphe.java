@@ -3,19 +3,21 @@ package modele;
 import java.util.*;
 
 public class Digraphe {
-    private TreeMap<Integer, Set<Integer>> chVoisinsSortants;
+    private HashMap<Ville, HashMap<Ville, Integer>> chVoisinsSortants;
 
-    public Digraphe(HashSet<Utilisateur> parVoisinsSortants) {
-        chVoisinsSortants = new TreeMap<>();
-        for (int indice_sommet = 0; indice_sommet < parVoisinsSortants.size(); indice_sommet++) {
-            chVoisinsSortants.put(indice_sommet, new TreeSet<>());
-            for (int voisinSortant : parVoisinsSortants[indice_sommet]) {
-                chVoisinsSortants.get(indice_sommet).add(voisinSortant);
+    public Digraphe(ArrayList<Ville> parVoisinsSortants) {
+        chVoisinsSortants = new HashMap<>();
+        for (Ville ville : parVoisinsSortants) {
+            for (Ville voisin : parVoisinsSortants) {
+                if (!chVoisinsSortants.containsKey(ville)) {
+                    chVoisinsSortants.put(ville, new HashMap<>());
+                }
+                chVoisinsSortants.get(ville).put(voisin, ville.getDistances().get(voisin));
             }
         }
     }
 
-    public void triTopologique() {
+    public ArrayList<String> triTopologique() {
     }
 
     public TreeMap<Integer, Integer> getDegresEntrants() {
