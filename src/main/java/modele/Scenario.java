@@ -22,18 +22,13 @@ public class Scenario {
     }
 
     public void ajouterVilles(ArrayList<String> parListe) {
-        for (String element : parListe) {
-            chVilles.put(element.split(" ")[0], new Ville(element.split(" ")[0]));
+        for (int i = 0; i < parListe.size(); i++) {
+            chVilles.put(parListe.get(i).split("\\s+")[0], new Ville(parListe.get(i).split("\\s+")[0]));
         }
-        for (String element : parListe) {
-            int valeursVides = 0;
-            for (int j = 1; j < element.split(" ").length - 1 - valeursVides; j++) {
-                if (element.split(" ")[j].isEmpty()) {
-                    valeursVides++;
-                    chVilles.get(element.split(" ")[0]).ajouterDistance(chVilles.get(parListe.get(j).split(" ")[0]), -1); // Pas de chemin possible
-                }
-                else {
-                    chVilles.get(element.split(" ")[0]).ajouterDistance(chVilles.get(parListe.get(j).split(" ")[0]), Integer.parseInt(element.split(" ")[j]));
+        for (int i = 0; i < parListe.size(); i++) {
+            for (int j = 1; j < parListe.get(i).split("\\s+").length; j++) {
+                if (!parListe.get(i).split("\\s+")[j].isEmpty()) {
+                    chVilles.get(parListe.get(i).split("\\s+")[0]).ajouterDistance(chVilles.get(parListe.get(j - 1).split("\\s+")[0]), Integer.parseInt(parListe.get(i).split("\\s+")[j]));
                 }
             }
         }
@@ -45,7 +40,7 @@ public class Scenario {
         }
     }
 
-    public ArrayList<String> trouverChemin() {
+    public void trouverChemin() {
         ArrayList<String> chemin = new ArrayList<>();
         ArrayList<Ville> villes = new ArrayList<>();
         chVilles.get("Velizy").setChVenteTrue(); // On doit commencer à Vélizy (V+)
@@ -58,7 +53,7 @@ public class Scenario {
             villes.add(commande.getChAcheteur().getChVille());
         }
         Digraphe d = new Digraphe(villes);
-        return d.triTopologique();
+        System.out.println(d.getDegresEntrants());
     }
 
     public HashMap<String,Utilisateur> getChUtilisateurs() {
@@ -80,8 +75,11 @@ public class Scenario {
         }
         resultat += "Villes :\n";
         for (Ville ville : chVilles.values()) {
-            resultat += "- " + ville.toString() + "\n";
+            for (Ville v : ville.getChDistances().keySet()) {
+                resultat += "- " + ville.getChNom() + " est à une distance de " + ville.getChDistances().get(v) + " km de " + v.getChNom() + "\n";
+            }
         }
+        resultat += "\n";
         resultat += "Commandes :\n";
         for (Commande commande : chCommandes) {
             resultat += "- " + commande.toString() + "\n";

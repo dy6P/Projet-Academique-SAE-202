@@ -12,14 +12,14 @@ public class Digraphe {
                 if (!chVoisinsSortants.containsKey(ville)) {
                     chVoisinsSortants.put(ville, new HashMap<>());
                 }
-                chVoisinsSortants.get(ville).put(voisin, ville.getDistances().get(voisin));
+                chVoisinsSortants.get(ville).put(voisin, ville.getChDistances().get(voisin));
             }
         }
     }
 
-    public ArrayList<String> triTopologique() {
+    /*public ArrayList<String> triTopologique() {
 
-    }
+    }*/
 
     public HashMap<Ville, Integer> getDegresEntrants() {
         HashMap<Ville, Integer> degresEntrants = new HashMap<>();
@@ -35,11 +35,11 @@ public class Digraphe {
         return degresEntrants;
     }
 
-    public String toString() {
+    /*public String toString() {
         String resultat = "";
         for (int sommet : chVoisinsSortants.keySet()) {
             resultat += sommet + " : " + chVoisinsSortants.get(sommet) + "\n";
         }
         return resultat;
-    }
+    }*/
 }

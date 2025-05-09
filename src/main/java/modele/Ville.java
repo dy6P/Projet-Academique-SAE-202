@@ -1,23 +1,23 @@
 package modele;
 
-import java.util.TreeMap;
+import java.util.HashMap;
 
 public class Ville {
     private Boolean chVente = false;
     private Boolean chAchat = false;
     private String chNom;
-    private TreeMap<Ville, Integer> chDistances;
+    private HashMap<Ville, Integer> chDistances;
 
     public Ville(String parNom) {
         chNom = parNom;
-        chDistances = new TreeMap<>();
+        chDistances = new HashMap<>();
     }
 
     public void ajouterDistance(Ville parVille, int parDistance) {
         chDistances.put(parVille, parDistance);
     }
 
-    public TreeMap<Ville, Integer> getDistances() {
+    public HashMap<Ville, Integer> getChDistances() {
         return chDistances;
     }
 
@@ -50,10 +50,6 @@ public class Ville {
     }
 
     public String toString() {
-        String resultat = "";
-        for (Ville key : chDistances.keySet()) {
-            resultat += chNom + " est à une distance de " + chDistances.get(key) + " km de " + key + "\n";
-        }
-        return resultat;
+        return chNom;
     }
 }
