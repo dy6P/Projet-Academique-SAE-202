@@ -18,33 +18,21 @@ public class Digraphe {
     }
 
     public ArrayList<String> triTopologique() {
+
     }
 
-    public TreeMap<Integer, Integer> getDegresEntrants() {
-        TreeMap<Integer, Integer> degresEntrants = new TreeMap<>();
-        for (int sommetCourant = 0; sommetCourant < chVoisinsSortants.size(); sommetCourant++) {
+    public HashMap<Ville, Integer> getDegresEntrants() {
+        HashMap<Ville, Integer> degresEntrants = new HashMap<>();
+        for (Ville ville : chVoisinsSortants.keySet()) {
             int nombreDegresEntrants = 0;
-            for (int indiceSommet = 0; indiceSommet < chVoisinsSortants.size(); indiceSommet++) {
-                for (Integer voisinSortant : chVoisinsSortants.get(indiceSommet)) {
-                    if (voisinSortant == sommetCourant) {
-                        nombreDegresEntrants ++;
-                    }
+            for (Ville voisin : chVoisinsSortants.get(ville).keySet()) {
+                if (ville.getChNom().equals(voisin.getChNom())) {
+                    nombreDegresEntrants ++;
                 }
             }
-            degresEntrants.put(sommetCourant, nombreDegresEntrants);
+            degresEntrants.put(ville, nombreDegresEntrants);
         }
         return degresEntrants;
-    }
-
-    public ArrayList<Integer> getSources() {
-        ArrayList<Integer> sources = new ArrayList<>();
-        TreeMap<Integer, Integer> degresEntrants = getDegresEntrants();
-        for (int sommet : degresEntrants.keySet()) {
-            if (degresEntrants.get(sommet) == 0) {
-                sources.add(sommet);
-            }
-        }
-        return sources;
     }
 
     public String toString() {
