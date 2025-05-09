@@ -9,8 +9,8 @@ import java.util.TreeMap;
 public class ClientScenario {
     public static void main(String[] args) {
         try {
-            String[] nomsFichiers = {"membres_APPLI.txt", "distances.txt", "scenario_0.txt", "scenario_1.txt", "scenario_2.txt", "scenario_3.txt", "scenario_4.txt", "scenario_5.txt", "scenario_6.txt", "scenario_7.txt", "scenario_8.txt"};
-            String[] nomsListes = {"membres", "distances", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"};
+            String[] nomsFichiers = {"distances.txt", "membres_APPLI.txt", "scenario_0.txt", "scenario_1.txt", "scenario_2.txt", "scenario_3.txt", "scenario_4.txt", "scenario_5.txt", "scenario_6.txt", "scenario_7.txt", "scenario_8.txt"};
+            String[] nomsListes = {"distances", "membres", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"};
             TreeMap<String, ArrayList<String>> correspondances = new TreeMap<>();
             for (int i = 0; i < nomsListes.length; i++) {
                 ArrayList<String> liste = new ArrayList<>();
@@ -24,8 +24,8 @@ public class ClientScenario {
                 reader.close();
             }
             Scenario s0 = new Scenario();
-            s0.ajouterUtilisateurs(correspondances.get("membres"));
             s0.ajouterVilles(correspondances.get("distances"));
+            s0.ajouterUtilisateurs(correspondances.get("membres"));
             s0.ajouterCommandes(correspondances.get("s0"));
             System.out.println(s0);
         } catch (FileNotFoundException parException) {

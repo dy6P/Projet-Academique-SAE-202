@@ -1,23 +1,23 @@
 package modele;
 
 public class Commande {
-    private String chVendeur;
-    private String chAcheteur;
+    private Utilisateur chVendeur;
+    private Utilisateur chAcheteur;
 
-    public Commande(String parVendeur, String parAcheteur) {
+    public Commande(Utilisateur parVendeur, Utilisateur parAcheteur) {
         chVendeur = parVendeur;
         chAcheteur = parAcheteur;
     }
 
-    public String getChVendeur() {
+    public Utilisateur getChVendeur() {
         return chVendeur;
     }
 
-    public String getChAcheteur() {
+    public Utilisateur getChAcheteur() {
         return chAcheteur;
     }
 
     public String toString() {
-        return chVendeur + " Vend une carte à " + chAcheteur;
+        return chVendeur.getChPseudo() + " Vend à " + chAcheteur.getChPseudo();
     }
 }

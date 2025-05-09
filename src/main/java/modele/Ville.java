@@ -3,19 +3,21 @@ package modele;
 import java.util.TreeMap;
 
 public class Ville {
+    private Boolean chVente = false;
+    private Boolean chAchat = false;
     private String chNom;
-    private TreeMap<String, Integer> chDistances;
+    private TreeMap<Ville, Integer> chDistances;
 
     public Ville(String parNom) {
         chNom = parNom;
         chDistances = new TreeMap<>();
     }
 
-    public void ajouterDistance(String parVille, int parDistance) {
+    public void ajouterDistance(Ville parVille, int parDistance) {
         chDistances.put(parVille, parDistance);
     }
 
-    public TreeMap<String, Integer> getDistances() {
+    public TreeMap<Ville, Integer> getDistances() {
         return chDistances;
     }
 
@@ -23,12 +25,34 @@ public class Ville {
         return chNom;
     }
 
+    public void setChAchatTrue() {
+        chAchat = true;
+    }
+
+    public void setChVenteTrue() {
+        chVente = true;
+    }
+
+    public void setChAchatFalse() {
+        chAchat = false;
+    }
+
+    public void setChVenteFalse() {
+        chVente = false;
+    }
+
+    public Boolean getChVente() {
+        return chVente;
+    }
+
+    public Boolean getChAchat() {
+        return chAchat;
+    }
+
     public String toString() {
         String resultat = "";
-        for (String key : chDistances.keySet()) {
-            if (chNom.split(" ")[1].equals("-")) {
-                resultat += chNom.split(" ")[0] + "est à une distance de " + chDistances.get(key) + " km de " + key + "\n";
-            }
+        for (Ville key : chDistances.keySet()) {
+            resultat += chNom + " est à une distance de " + chDistances.get(key) + " km de " + key + "\n";
         }
         return resultat;
     }

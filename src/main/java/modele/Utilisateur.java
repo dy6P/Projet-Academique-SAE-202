@@ -1,15 +1,15 @@
 package modele;
 
 public class Utilisateur {
-    private String chVille;
+    private Ville chVille;
     private String chPseudo;
 
-    public Utilisateur(String parPseudo, String parVille) {
+    public Utilisateur(String parPseudo, Ville parVille) {
         chVille = parVille;
         chPseudo = parPseudo;
     }
 
-    public String getChVille() {
+    public Ville getChVille() {
         return chVille;
     }
 
@@ -18,6 +18,6 @@ public class Utilisateur {
     }
 
     public String toString() {
-        return chPseudo + " habite à " + chVille;
+        return chPseudo + " habite à " + chVille.getChNom();
     }
 }

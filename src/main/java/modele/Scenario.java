@@ -17,45 +17,47 @@ public class Scenario {
 
     public void ajouterUtilisateurs(ArrayList<String> parListe) {
         for (String element : parListe) {
-            chUtilisateurs.put(element.split(" ")[0],new Utilisateur(element.split(" ")[0], element.split(" ")[1]));
+            chUtilisateurs.put(element.split(" ")[0], new Utilisateur(element.split(" ")[0], chVilles.get(element.split(" ")[1])));
         }
     }
 
     public void ajouterVilles(ArrayList<String> parListe) {
-        for (int i = 0; i < parListe.size(); i++) {
-            Ville ville = new Ville(parListe.get(i).split(" ")[0]);
+        for (String element : parListe) {
+            chVilles.put(element.split(" ")[0], new Ville(element.split(" ")[0]));
+        }
+        for (String element : parListe) {
             int valeursVides = 0;
-            for (int j = 1; j < parListe.get(i).split(" ").length - 1 - valeursVides; j++) {
-                if (parListe.get(i).split(" ")[j].isEmpty()) {
+            for (int j = 1; j < element.split(" ").length - 1 - valeursVides; j++) {
+                if (element.split(" ")[j].isEmpty()) {
                     valeursVides++;
-                    ville.ajouterDistance(parListe.get(j).split(" ")[0], 99999999);
+                    chVilles.get(element.split(" ")[0]).ajouterDistance(chVilles.get(parListe.get(j).split(" ")[0]), 99999999);
                 }
                 else {
-                    ville.ajouterDistance(parListe.get(j).split(" ")[0], Integer.parseInt(parListe.get(i).split(" ")[j]));
+                    chVilles.get(element.split(" ")[0]).ajouterDistance(chVilles.get(parListe.get(j).split(" ")[0]), Integer.parseInt(element.split(" ")[j]));
                 }
             }
-            chVilles.put(ville.getChNom() + " +", ville);
-            chVilles.put(ville.getChNom() + " -", ville);
         }
     }
 
     public void ajouterCommandes(ArrayList<String> parListe) {
         for (String element : parListe) {
-            chCommandes.add(new Commande(element.split(" -> ")[0], element.split(" -> ")[1]));
+            chCommandes.add(new Commande(chUtilisateurs.get(element.split(" -> ")[0]), chUtilisateurs.get(element.split(" -> ")[1])));
         }
     }
 
     public ArrayList<String> trouverChemin() {
         ArrayList<String> chemin = new ArrayList<>();
-        HashMap<Ville,ArrayList<Ville>> voisinSortant = new HashMap<>();
-        voisinSortant.put(chVilles.get("Velizy +"), new ArrayList<>());
+        HashMap<Ville, HashMap<Ville, Integer>> voisinsSortants = new HashMap<>();
+        chVilles.get("Velizy").setChVenteTrue(); // On doit commencer à Vélizy (V+)
+        chVilles.get("Velizy").setChAchatTrue(); // On doit finir à Vélizy (V-)
+        voisinsSortants.put(chVilles.get("Velizy"), new HashMap<>());
         for (Commande commande : chCommandes) {
-            String ville = chUtilisateurs.get(commande.getChVendeur()).getChVille();
-            if (voisinSortant.containsKey(ville)) {
-                voisinSortant.put(chVilles.get(ville), new ArrayList<>());
-            }
+            commande.getChVendeur().getChVille().setChVenteTrue();
+            commande.getChAcheteur().getChVille().setChAchatTrue();
+            voisinsSortants.put(commande.getChVendeur().getChVille(), new HashMap<>());
+            voisinsSortants.put(commande.getChAcheteur().getChVille(), new HashMap<>());
         }
-        return chemin;
+        return d.triTopologique();
     }
 
     public HashMap<String,Utilisateur> getChUtilisateurs() {
