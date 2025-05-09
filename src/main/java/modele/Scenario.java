@@ -30,7 +30,7 @@ public class Scenario {
             for (int j = 1; j < element.split(" ").length - 1 - valeursVides; j++) {
                 if (element.split(" ")[j].isEmpty()) {
                     valeursVides++;
-                    chVilles.get(element.split(" ")[0]).ajouterDistance(chVilles.get(parListe.get(j).split(" ")[0]), 99999999);
+                    chVilles.get(element.split(" ")[0]).ajouterDistance(chVilles.get(parListe.get(j).split(" ")[0]), -1); // Pas de chemin possible
                 }
                 else {
                     chVilles.get(element.split(" ")[0]).ajouterDistance(chVilles.get(parListe.get(j).split(" ")[0]), Integer.parseInt(element.split(" ")[j]));
@@ -56,6 +56,11 @@ public class Scenario {
             commande.getChAcheteur().getChVille().setChAchatTrue();
             voisinsSortants.put(commande.getChVendeur().getChVille(), new HashMap<>());
             voisinsSortants.put(commande.getChAcheteur().getChVille(), new HashMap<>());
+        }
+        for (Ville ville : voisinsSortants.keySet()) {
+            for (Ville voisin : voisinsSortants.keySet()) {
+                voisinsSortants.get(ville).put(voisin, ville.getDistances().get(voisin));
+            }
         }
         return d.triTopologique();
     }

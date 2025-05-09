@@ -5,8 +5,6 @@ import java.util.*;
 public class Digraphe {
     private TreeMap<Integer, Set<Integer>> chVoisinsSortants;
 
-
-    //adapter la classe avec des str + rajouter les doubles
     public Digraphe(HashSet<Utilisateur> parVoisinsSortants) {
         chVoisinsSortants = new TreeMap<>();
         for (int indice_sommet = 0; indice_sommet < parVoisinsSortants.size(); indice_sommet++) {
