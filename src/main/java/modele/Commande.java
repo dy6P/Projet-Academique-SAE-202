@@ -18,6 +18,6 @@ public class Commande {
     }
 
     public String toString() {
-        return chVendeur.getChPseudo() + " Vend à " + chAcheteur.getChPseudo();
+        return chVendeur.getChPseudo() + " (" + chVendeur.getChVille() + ")" + " Vend à " + chAcheteur.getChPseudo() + " (" + chAcheteur.getChVille() + ")";
     }
 }

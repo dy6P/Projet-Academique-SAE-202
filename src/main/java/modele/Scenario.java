@@ -3,9 +3,10 @@ package modele;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 
 public class Scenario {
-    private HashMap<String,Utilisateur> chUtilisateurs;
+    private HashMap<String, Utilisateur> chUtilisateurs;
     private HashMap<String, Ville> chVilles;
     private HashSet<Commande> chCommandes;
 
@@ -40,19 +41,24 @@ public class Scenario {
         }
     }
 
-    public void trouverChemin() {
+    public void trouverChemin(String parDepart) {
         ArrayList<String> chemin = new ArrayList<>();
-        ArrayList<Ville> villes = new ArrayList<>();
-        chVilles.get("Velizy").setChVenteTrue(); // On doit commencer à Vélizy (V+)
-        chVilles.get("Velizy").setChAchatTrue(); // On doit finir à Vélizy (V-)
-        villes.add(chVilles.get("Velizy"));
+        TreeMap<String, TreeMap<String, Integer>> voisinsSortants = new TreeMap<>();
         for (Commande commande : chCommandes) {
-            commande.getChVendeur().getChVille().setChVenteTrue();
-            commande.getChAcheteur().getChVille().setChAchatTrue();
-            villes.add(commande.getChVendeur().getChVille());
-            villes.add(commande.getChAcheteur().getChVille());
+            if (!commande.getChVendeur().getChVille().getChNom().equals(parDepart) && !commande.getChAcheteur().getChVille().getChNom().equals(parDepart)) {
+                String villeVente = commande.getChVendeur().getChVille().getChNom() + " + ";
+                String villeAchat = commande.getChAcheteur().getChVille().getChNom() + " - ";
+                if (!voisinsSortants.containsKey(villeVente)) {
+                    voisinsSortants.put(villeVente, new TreeMap<>());
+                }
+                if (!voisinsSortants.containsKey(villeAchat)) {
+                    voisinsSortants.put(villeAchat, new TreeMap<>());
+                }
+                voisinsSortants.get(villeVente).put(villeAchat, chVilles.get(villeVente.split(" ")[0]).getChDistances().get(chVilles.get(villeAchat.split(" ")[0])));
+            }
         }
-        Digraphe d = new Digraphe(villes);
+        System.out.println(voisinsSortants);
+        Digraphe d = new Digraphe(voisinsSortants);
         System.out.println(d.getDegresEntrants());
     }
 

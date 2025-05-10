@@ -3,8 +3,6 @@ package modele;
 import java.util.HashMap;
 
 public class Ville {
-    private Boolean chVente = false;
-    private Boolean chAchat = false;
     private String chNom;
     private HashMap<Ville, Integer> chDistances;
 
@@ -22,34 +20,10 @@ public class Ville {
     }
 
     public String getChNom() {
-        return chNom;
-    }
-
-    public void setChAchatTrue() {
-        chAchat = true;
-    }
-
-    public void setChVenteTrue() {
-        chVente = true;
-    }
-
-    public void setChAchatFalse() {
-        chAchat = false;
-    }
-
-    public void setChVenteFalse() {
-        chVente = false;
-    }
-
-    public Boolean getChVente() {
-        return chVente;
-    }
-
-    public Boolean getChAchat() {
-        return chAchat;
+            return chNom;
     }
 
     public String toString() {
-        return chNom;
+        return getChNom();
     }
 }

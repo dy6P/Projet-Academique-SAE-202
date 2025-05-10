@@ -28,7 +28,7 @@ public class ClientScenario {
             s0.ajouterUtilisateurs(correspondances.get("membres"));
             s0.ajouterCommandes(correspondances.get("s0"));
             System.out.println(s0);
-            s0.trouverChemin();
+            s0.trouverChemin("Velizy");
         } catch (FileNotFoundException parException) {
             System.out.println("Erreur lors de la lecture du fichier text.");
             parException.printStackTrace();

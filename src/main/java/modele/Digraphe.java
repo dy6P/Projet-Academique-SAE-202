@@ -3,34 +3,28 @@ package modele;
 import java.util.*;
 
 public class Digraphe {
-    private HashMap<Ville, HashMap<Ville, Integer>> chVoisinsSortants;
+    private TreeMap<String, TreeMap<String, Integer>> chVoisinsSortants;
 
-    public Digraphe(ArrayList<Ville> parVoisinsSortants) {
-        chVoisinsSortants = new HashMap<>();
-        for (Ville ville : parVoisinsSortants) {
-            for (Ville voisin : parVoisinsSortants) {
-                if (!chVoisinsSortants.containsKey(ville)) {
-                    chVoisinsSortants.put(ville, new HashMap<>());
-                }
-                chVoisinsSortants.get(ville).put(voisin, ville.getChDistances().get(voisin));
-            }
-        }
+    public Digraphe(TreeMap<String, TreeMap<String, Integer>> parVoisinsSortants) {
+        chVoisinsSortants = parVoisinsSortants;
     }
 
-    /*public ArrayList<String> triTopologique() {
+    public ArrayList<String> triTopologique() {
 
-    }*/
+    }
 
-    public HashMap<Ville, Integer> getDegresEntrants() {
-        HashMap<Ville, Integer> degresEntrants = new HashMap<>();
-        for (Ville ville : chVoisinsSortants.keySet()) {
-            int nombreDegresEntrants = 0;
-            for (Ville voisin : chVoisinsSortants.get(ville).keySet()) {
-                if (ville.getChNom().equals(voisin.getChNom())) {
-                    nombreDegresEntrants ++;
+    public TreeMap<String, Integer> getDegresEntrants() {
+        TreeMap<String, Integer> degresEntrants = new TreeMap<>();
+        for (String ville : chVoisinsSortants.keySet()) {
+            int compteur = 0;
+            for (String v : chVoisinsSortants.keySet()) {
+                for (String voisin : chVoisinsSortants.get(v).keySet()) {
+                    if (ville.equals(voisin)) {
+                        compteur++;
+                    }
                 }
             }
-            degresEntrants.put(ville, nombreDegresEntrants);
+            degresEntrants.put(ville, compteur);
         }
         return degresEntrants;
     }
