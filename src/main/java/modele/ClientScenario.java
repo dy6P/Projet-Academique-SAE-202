@@ -25,8 +25,9 @@ public class ClientScenario {
             }
             Scenario s0 = new Scenario();
             s0.ajouterVilles(correspondances.get("distances"));
+            s0.ajouterDistances();
             s0.ajouterUtilisateurs(correspondances.get("membres"));
-            s0.ajouterCommandes(correspondances.get("s1"));
+            s0.ajouterCommandes(correspondances.get("s0"));
             System.out.println(s0);
             s0.trouverChemin("Velizy");
         } catch (FileNotFoundException parException) {

@@ -3,62 +3,92 @@ package modele;
 import java.util.*;
 
 public class Digraphe {
-    private TreeMap<String, TreeMap<String, Integer>> chVoisinsSortants;
+    private TreeMap<String, TreeSet<String>> chVoisinsSortants;
     private TreeMap<String, Integer> chDegresEntrants;
+    private ArrayList<String> chSources;
     private ArrayList<String> chTriTopologique;
+    private TreeMap<String, TreeMap<String,Integer>> chDistances;
 
-    public Digraphe(TreeMap<String, TreeMap<String, Integer>> parVoisinsSortants) {
+    public Digraphe(TreeMap<String, TreeSet<String>> parVoisinsSortants, TreeMap<String, TreeMap<String,Integer>> parDistances) {
         chVoisinsSortants = parVoisinsSortants;
         chDegresEntrants = new TreeMap<>();
+        chTriTopologique = new ArrayList<>();
+        chSources = new ArrayList<>();
+        chDistances = parDistances;
     }
 
+    public void ajouterSource(String parSource, String parNouvelleSource) {
+        chSources.add(parNouvelleSource);
+        if (parSource != null) {
+            for (int i = 1; i < chSources.size(); i++) { // tri par distance croissante
+                String currentSource = chSources.get(i);
+                int j = i - 1;
+                while (j >= 0 && (chDistances.get(parSource.split(" ")[0]).get(currentSource.split(" ")[0]) < chDistances.get(parSource.split(" ")[0]).get(chSources.get(j).split(" ")[0]))) {
+                    chSources.set(j + 1, chSources.get(j));
+                    j--;
+                }
+                chSources.set(j + 1, currentSource);
+            }
+            List<String> positifs = new ArrayList<>();
+            List<String> negatifs = new ArrayList<>();
+            for (String source : chSources) {
+                if (source.split(" ")[1].equals("+")) {
+                    positifs.add(source);
+                } else {
+                    negatifs.add(source);
+                }
+            }
+            chSources.clear();
+            chSources.addAll(positifs);
+            chSources.addAll(negatifs);
+        }
+    }
+
+
     public void triTopologique(String parDepart) {
-        ArrayList<String> triTopologique = new ArrayList<>();
-        TreeMap<String, Integer> degresEntrants = getDegresEntrants();
-        ArrayList<String> sources = identifierSources(parDepart);
-        while (!sources.isEmpty()) {
-            String source = sources.removeFirst();
-            triTopologique.add(source);
-            if (chVoisinsSortants.get(source) != null) {
-                for (String voisin : chVoisinsSortants.get(source).keySet()) {
-                    degresEntrants.put(voisin, degresEntrants.get(voisin) - 1);
-                    if (degresEntrants.get(voisin) == 0) {
-                        sources.add(voisin);
-                    }
+        ajouterSource(null, parDepart + " + ");
+        while (!chSources.isEmpty()) {
+            System.out.println(chSources);
+            String source = chSources.removeFirst();
+            chTriTopologique.add(source);
+            System.out.println(source);
+            for (String voisin : chVoisinsSortants.get(source)) {
+                chDegresEntrants.put(voisin, chDegresEntrants.get(voisin) - 1);
+                if (chDegresEntrants.get(voisin) == 0 && !chSources.contains(voisin)) {
+                    ajouterSource(source, voisin);
                 }
             }
         }
-        chTriTopologique = triTopologique;
     }
 
     public void DegresEntrants() {
-        TreeMap<String, Integer> degresEntrants = new TreeMap<>();
         for (String ville : chVoisinsSortants.keySet()) {
             int compteur = 0;
             for (String v : chVoisinsSortants.keySet()) {
-                for (String voisin : chVoisinsSortants.get(v).keySet()) {
+                for (String voisin : chVoisinsSortants.get(v)) {
                     if (ville.equals(voisin)) {
                         compteur++;
                     }
                 }
             }
-            degresEntrants.put(ville, compteur);
+            chDegresEntrants.put(ville, compteur);
         }
-        chDegresEntrants = degresEntrants;
-    }
-
-    public ArrayList<String> identifierSources(String parVilleComparaison) {
-        ArrayList<String> sources = new ArrayList<>();
-        for (String ville : chDegresEntrants.keySet()) {
-            if (chDegresEntrants.get(ville) == 0) {
-                sources.add(ville);
-            }
-        }
-        return sources;
     }
 
     public TreeMap<String, Integer> getDegresEntrants() {
         return chDegresEntrants;
+    }
+
+    public ArrayList<String> getChSources() {
+        return chSources;
+    }
+
+    public ArrayList<String> getChTriTopologique() {
+        return chTriTopologique;
+    }
+
+    public TreeMap<String, TreeSet<String>> getChVoisinsSortants() {
+        return chVoisinsSortants;
     }
 
     public String toString() {
