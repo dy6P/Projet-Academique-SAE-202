@@ -44,6 +44,8 @@ public class Scenario {
     public void trouverChemin(String parDepart) {
         ArrayList<String> chemin = new ArrayList<>();
         TreeMap<String, TreeMap<String, Integer>> voisinsSortants = new TreeMap<>();
+        voisinsSortants.put(parDepart + " - ", new TreeMap<>());
+        voisinsSortants.put(parDepart + " + ", new TreeMap<>());
         for (Commande commande : chCommandes) {
             if (!commande.getChVendeur().getChVille().getChNom().equals(parDepart) && !commande.getChAcheteur().getChVille().getChNom().equals(parDepart)) {
                 String villeVente = commande.getChVendeur().getChVille().getChNom() + " + ";
@@ -55,11 +57,29 @@ public class Scenario {
                     voisinsSortants.put(villeAchat, new TreeMap<>());
                 }
                 voisinsSortants.get(villeVente).put(villeAchat, chVilles.get(villeVente.split(" ")[0]).getChDistances().get(chVilles.get(villeAchat.split(" ")[0])));
+                voisinsSortants.get(villeVente).put(villeVente.split(" ")[0] + " - ", chVilles.get(villeVente.split(" ")[0]).getChDistances().get(chVilles.get(villeVente.split(" ")[0])));
+                voisinsSortants.get(villeVente).put(parDepart + " - ", chVilles.get(villeVente.split(" ")[0]).getChDistances().get(chVilles.get(parDepart)));
             }
         }
-        System.out.println(voisinsSortants);
+        for (String ville : new HashSet<>(voisinsSortants.keySet())) { // copie de voisinsSortants pour éviter une erreur (on aurait pu faire la boucle avec les indices aussi)
+            if (!ville.equals(parDepart + " + ")) {
+                voisinsSortants.get(parDepart + " + ").put(ville, chVilles.get(parDepart).getChDistances().get(chVilles.get(ville.split(" ")[0])));
+            }
+            if (!ville.split(" ")[0].equals(parDepart) && ville.split(" ")[1].equals("+")) {
+                for (String v : voisinsSortants.get(ville).keySet()) {
+                    if (!v.split(" ")[0].equals(ville.split(" ")[0]) && v.split(" ")[1].equals("-")) {
+                        if (!voisinsSortants.containsKey(ville.split(" ")[0] + " - ")) {
+                            voisinsSortants.put(ville.split(" ")[0] + " - ", new TreeMap<>());
+                        }
+                        voisinsSortants.get(ville.split(" ")[0] + " - ").put(v, chVilles.get(ville.split(" ")[0]).getChDistances().get(chVilles.get(v.split(" ")[0])));
+                    }
+                }
+            }
+        }
         Digraphe d = new Digraphe(voisinsSortants);
-        System.out.println(d.getDegresEntrants());
+        d.DegresEntrants();
+        d.triTopologique(parDepart);
+        System.out.println(d);
     }
 
     public HashMap<String,Utilisateur> getChUtilisateurs() {
