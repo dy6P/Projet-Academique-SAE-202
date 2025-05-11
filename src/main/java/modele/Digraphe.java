@@ -48,10 +48,8 @@ public class Digraphe {
     public void triTopologique(String parDepart) {
         ajouterSource(null, parDepart + " + ");
         while (!chSources.isEmpty()) {
-            System.out.println(chSources);
             String source = chSources.removeFirst();
             chTriTopologique.add(source);
-            System.out.println(source);
             for (String voisin : chVoisinsSortants.get(source)) {
                 chDegresEntrants.put(voisin, chDegresEntrants.get(voisin) - 1);
                 if (chDegresEntrants.get(voisin) == 0 && !chSources.contains(voisin)) {
