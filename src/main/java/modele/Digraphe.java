@@ -29,6 +29,7 @@ public class Digraphe {
                 }
                 chSources.set(j + 1, currentSource);
             }
+            /*
             List<String> positifs = new ArrayList<>();
             List<String> negatifs = new ArrayList<>();
             for (String source : chSources) {
@@ -40,7 +41,7 @@ public class Digraphe {
             }
             chSources.clear();
             chSources.addAll(positifs);
-            chSources.addAll(negatifs);
+            chSources.addAll(negatifs);*/
         }
     }
 

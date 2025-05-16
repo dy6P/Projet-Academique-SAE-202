@@ -65,16 +65,11 @@ public class Scenario {
                     voisinsSortants.put(villeAchat, new TreeSet<>());
                 }
                 voisinsSortants.get(villeVente).add(villeAchat);
+                voisinsSortants.get(villeAchat).add(parDepart + " - ");
+                voisinsSortants.get(parDepart + " + ").add(villeVente);
             }
         }
-        for (String ville : new HashSet<>(voisinsSortants.keySet())) { // copie de voisinsSortants pour éviter une erreur (on aurait pu faire la boucle avec les indices aussi)
-            if (!ville.equals(parDepart + " + ") && !ville.split(" ")[1].equals("-") || ville.equals(parDepart + " - ")) {
-                voisinsSortants.get(parDepart + " + ").add(ville);
-            }
-            if (!ville.split(" ")[1].equals("+") && !ville.equals(parDepart + " - ")) {
-                voisinsSortants.get(ville).add(parDepart + " - ");
-            }
-        }
+        System.out.println(voisinsSortants);
         Digraphe d = new Digraphe(voisinsSortants, chDistances);
         d.DegresEntrants();
         d.triTopologique(parDepart);
