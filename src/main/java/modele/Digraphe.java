@@ -17,32 +17,31 @@ public class Digraphe {
         chDistances = parDistances;
     }
 
-    public void ajouterSource(String parSource, String parNouvelleSource) {
-        chSources.add(parNouvelleSource);
-        if (parSource != null) {
-            for (int i = 1; i < chSources.size(); i++) {
-                String currentSource = chSources.get(i);
-                int j = i - 1;
-                while ((j >= 0 && (chDistances.get(parSource.split(" ")[0]).get(currentSource.split(" ")[0]) < chDistances.get(parSource.split(" ")[0]).get(chSources.get(j).split(" ")[0])))
-                        && (parSource.split(" ")[0].equals(currentSource.split(" ")[0]) || parSource.split(" ")[1].equals(currentSource.split(" ")[1]))) {
-                    chSources.set(j + 1, chSources.get(j));
-                    j--;
-                }
-                chSources.set(j + 1, currentSource);
+    public String extraireSource(String parSource) {
+        if (parSource == null) {
+            return chSources.removeFirst();
+        }
+        int distance = chDistances.get(parSource.split(" ")[0]).get(chSources.getFirst().split(" ")[0]);
+        int indice = 0;
+        for (int i = 0; i < chSources.size(); i++) {
+            if ((chDistances.get(parSource.split(" ")[0]).get(chSources.get(i).split(" ")[0])  <  distance)   &&   (parSource.split(" ")[0].equals(chSources.get(i).split(" ")[0])  ||  parSource.split(" ")[1].equals(chSources.get(i).split(" ")[1]))) { // (Si la distance entre la source courante et l'ancienne source est plus petite que l'ancienne distance) et (si la source courante a le même signe ou le a le même nom que l'ancienne source).
+                distance = chDistances.get(parSource.split(" ")[0]).get(chSources.get(i).split(" ")[0]);
+                indice = i;
             }
         }
+        return chSources.remove(indice);
     }
 
-
     public void triTopologique(String parDepart) {
-        ajouterSource(null, parDepart + " + ");
+        chSources.add(parDepart + " + ");
+        String source = null;
         while (!chSources.isEmpty()) {
-            String source = chSources.removeFirst();
+            source = extraireSource(source);
             chTriTopologique.add(source);
             for (String voisin : chVoisinsSortants.get(source)) {
                 chDegresEntrants.put(voisin, chDegresEntrants.get(voisin) - 1);
                 if (chDegresEntrants.get(voisin) == 0 && !chSources.contains(voisin)) {
-                    ajouterSource(source, voisin);
+                    chSources.add(voisin);
                 }
             }
         }
