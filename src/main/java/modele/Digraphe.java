@@ -17,6 +17,14 @@ public class Digraphe {
         chDistances = parDistances;
     }
 
+    public int calculerDistance() {
+        int distance = 0;
+        for (int i = 0; i < chTriTopologique.size() - 1; i++) {
+            distance += chDistances.get(chTriTopologique.get(i).split(" ")[0]).get(chTriTopologique.get(i + 1).split(" ")[0]);
+        }
+        return distance;
+    }
+
     public String extraireSource(String parSource) {
         if (parSource == null) {
             return chSources.removeFirst();

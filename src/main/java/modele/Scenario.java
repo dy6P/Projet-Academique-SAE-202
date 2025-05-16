@@ -69,12 +69,12 @@ public class Scenario {
                 voisinsSortants.get(parDepart + " + ").add(villeVente);
             }
         }
-        System.out.println(voisinsSortants);
         Digraphe d = new Digraphe(voisinsSortants, chDistances);
         d.DegresEntrants();
         d.triTopologique(parDepart);
         System.out.println(d);
         System.out.println(d.getChTriTopologique());
+        System.out.println(d.calculerDistance());
     }
 
     public TreeMap<String,Utilisateur> getChUtilisateurs() {
