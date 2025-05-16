@@ -20,28 +20,16 @@ public class Digraphe {
     public void ajouterSource(String parSource, String parNouvelleSource) {
         chSources.add(parNouvelleSource);
         if (parSource != null) {
-            for (int i = 1; i < chSources.size(); i++) { // tri par distance croissante
+            for (int i = 1; i < chSources.size(); i++) {
                 String currentSource = chSources.get(i);
                 int j = i - 1;
-                while (j >= 0 && (chDistances.get(parSource.split(" ")[0]).get(currentSource.split(" ")[0]) < chDistances.get(parSource.split(" ")[0]).get(chSources.get(j).split(" ")[0]))) {
+                while ((j >= 0 && (chDistances.get(parSource.split(" ")[0]).get(currentSource.split(" ")[0]) < chDistances.get(parSource.split(" ")[0]).get(chSources.get(j).split(" ")[0])))
+                        && (parSource.split(" ")[0].equals(currentSource.split(" ")[0]) || parSource.split(" ")[1].equals(currentSource.split(" ")[1]))) {
                     chSources.set(j + 1, chSources.get(j));
                     j--;
                 }
                 chSources.set(j + 1, currentSource);
             }
-            /*
-            List<String> positifs = new ArrayList<>();
-            List<String> negatifs = new ArrayList<>();
-            for (String source : chSources) {
-                if (source.split(" ")[1].equals("+")) {
-                    positifs.add(source);
-                } else {
-                    negatifs.add(source);
-                }
-            }
-            chSources.clear();
-            chSources.addAll(positifs);
-            chSources.addAll(negatifs);*/
         }
     }
 
