@@ -49,7 +49,7 @@ public class Scenario {
         }
     }
 
-    public void trouverChemin(String parDepart) {
+    public void trouverChemins(String parDepart) {
         ArrayList<String> chemin = new ArrayList<>();
         TreeMap<String, TreeSet<String>> voisinsSortants = new TreeMap<>();
         voisinsSortants.put(parDepart + " - ", new TreeSet<>());
@@ -69,24 +69,9 @@ public class Scenario {
                 voisinsSortants.get(parDepart + " + ").add(villeVente);
             }
         }
-        Digraphe d = new Digraphe(voisinsSortants, chDistances);
-        d.DegresEntrants();
+        Digraphe d = new Digraphe(voisinsSortants, chDistances, parDepart);
         d.triTopologique(parDepart);
         System.out.println(d);
-        System.out.println(d.getChTriTopologique());
-        System.out.println(d.calculerDistance());
-    }
-
-    public TreeMap<String,Utilisateur> getChUtilisateurs() {
-        return chUtilisateurs;
-    }
-
-    public TreeMap<String, Ville> getChVilles() {
-        return chVilles;
-    }
-
-    public HashSet<Commande> getChCommandes() {
-        return chCommandes;
     }
 
     public String toString() {

@@ -4,58 +4,64 @@ import java.util.*;
 
 public class Digraphe {
     private TreeMap<String, TreeSet<String>> chVoisinsSortants;
-    private TreeMap<String, Integer> chDegresEntrants;
-    private ArrayList<String> chSources;
-    private ArrayList<String> chTriTopologique;
     private TreeMap<String, TreeMap<String,Integer>> chDistances;
+    private String chDepart;
 
-    public Digraphe(TreeMap<String, TreeSet<String>> parVoisinsSortants, TreeMap<String, TreeMap<String,Integer>> parDistances) {
+    public Digraphe(TreeMap<String, TreeSet<String>> parVoisinsSortants, TreeMap<String, TreeMap<String,Integer>> parDistances, String parDepart) {
         chVoisinsSortants = parVoisinsSortants;
-        chDegresEntrants = new TreeMap<>();
-        chTriTopologique = new ArrayList<>();
-        chSources = new ArrayList<>();
         chDistances = parDistances;
+        chDepart = parDepart;
     }
 
-    public int calculerDistance() {
+    public int calculerDistance(ArrayList<String> parTriTopologique) {
         int distance = 0;
-        for (int i = 0; i < chTriTopologique.size() - 1; i++) {
-            distance += chDistances.get(chTriTopologique.get(i).split(" ")[0]).get(chTriTopologique.get(i + 1).split(" ")[0]);
+        for (int i = 0; i < parTriTopologique.size() - 1; i++) {
+            distance += chDistances.get(parTriTopologique.get(i).split(" ")[0]).get(parTriTopologique.get(i + 1).split(" ")[0]);
         }
         return distance;
     }
 
-    public String extraireSource(String parSource) {
-        if (parSource == null) {
-            return chSources.removeFirst();
-        }
-        int distance = chDistances.get(parSource.split(" ")[0]).get(chSources.getFirst().split(" ")[0]);
+    public int extraireSource(String parSource, ArrayList<String> parSources) {
         int indice = 0;
-        for (int i = 0; i < chSources.size(); i++) {
-            if ((chDistances.get(parSource.split(" ")[0]).get(chSources.get(i).split(" ")[0])  <  distance)   &&   (parSource.split(" ")[0].equals(chSources.get(i).split(" ")[0])  ||  parSource.split(" ")[1].equals(chSources.get(i).split(" ")[1]))) { // (Si la distance entre la source courante et l'ancienne source est plus petite que l'ancienne distance) et (si la source courante a le même signe ou le a le même nom que l'ancienne source).
-                distance = chDistances.get(parSource.split(" ")[0]).get(chSources.get(i).split(" ")[0]);
-                indice = i;
-            }
-        }
-        return chSources.remove(indice);
-    }
-
-    public void triTopologique(String parDepart) {
-        chSources.add(parDepart + " + ");
-        String source = null;
-        while (!chSources.isEmpty()) {
-            source = extraireSource(source);
-            chTriTopologique.add(source);
-            for (String voisin : chVoisinsSortants.get(source)) {
-                chDegresEntrants.put(voisin, chDegresEntrants.get(voisin) - 1);
-                if (chDegresEntrants.get(voisin) == 0 && !chSources.contains(voisin)) {
-                    chSources.add(voisin);
+        if (parSource != null) {
+            for (int i = 0; i < parSources.size(); i++) {
+                String sourceVille = parSource.split(" ")[0];
+                String villeCandidate = parSources.get(i).split(" ")[0];
+                String villeActuelle = parSources.get(indice).split(" ")[0];
+                if (chDistances.get(sourceVille).get(villeCandidate) < chDistances.get(sourceVille).get(villeActuelle)) {
+                    indice = i;
                 }
             }
         }
+        return indice;
     }
 
-    public void DegresEntrants() {
+    public ArrayList<String> triTopologique(String parDepart) {
+        ArrayList<String> triTopologique = new ArrayList<>();
+        ArrayList<String> sources = new ArrayList<>();
+        TreeMap<String, Integer> degresEntrants = DegresEntrants();
+        sources.add(parDepart + " + ");
+        String source = null;
+        while (!sources.isEmpty()) {
+            source = sources.remove(extraireSource(source, sources));
+            triTopologique.add(source);
+            for (String voisin : chVoisinsSortants.get(source)) {
+                degresEntrants.put(voisin, degresEntrants.get(voisin) - 1);
+                if (degresEntrants.get(voisin) == 0 && !sources.contains(voisin)) {
+                    sources.add(voisin);
+                }
+            }
+        }
+        return triTopologique;
+    }
+
+    /*public void kSolutions(int parK) {
+        HashMap<ArrayList<String>, Integer> solutions = new HashMap<>();
+        for (String villePlus : chVoisinsSortants.keySet()) {}
+    }*/
+
+    public TreeMap<String, Integer> DegresEntrants() {
+        TreeMap<String, Integer> degresEntrants = new TreeMap<>();
         for (String ville : chVoisinsSortants.keySet()) {
             int compteur = 0;
             for (String v : chVoisinsSortants.keySet()) {
@@ -65,36 +71,23 @@ public class Digraphe {
                     }
                 }
             }
-            chDegresEntrants.put(ville, compteur);
+            degresEntrants.put(ville, compteur);
         }
-    }
-
-    public TreeMap<String, Integer> getDegresEntrants() {
-        return chDegresEntrants;
-    }
-
-    public ArrayList<String> getChSources() {
-        return chSources;
-    }
-
-    public ArrayList<String> getChTriTopologique() {
-        return chTriTopologique;
-    }
-
-    public TreeMap<String, TreeSet<String>> getChVoisinsSortants() {
-        return chVoisinsSortants;
+        return degresEntrants;
     }
 
     public String toString() {
-        String resultat = "CHEMIN :";
+        StringBuilder resultat = new StringBuilder("CHEMIN :");
         String precedent = "";
-        for (String tache : chTriTopologique) {
+        ArrayList<String> triTopologique = triTopologique(chDepart);
+        for (String tache : triTopologique) {
             tache = tache.split(" ")[0];
             if (!tache.equals(precedent)) {
-                resultat += " -> " + tache;
+                resultat.append(" -> ").append(tache);
             }
             precedent = tache;
         }
-        return resultat;
+        resultat.append("\nDISTANCE : ").append(calculerDistance(triTopologique)).append(" km");
+        return resultat.toString();
     }
 }
