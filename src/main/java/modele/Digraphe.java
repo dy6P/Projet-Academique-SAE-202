@@ -34,8 +34,16 @@ public class Digraphe {
                 else if (parComparateur == 1 && chDistances.get(sourceVille).get(villeCandidate) < chDistances.get(sourceVille).get(villeActuelle)) {
                     indice = i;
                 }
-                else if (parComparateur == 2 && chVoisinsSortants.get(parSources.get(indice)).size() > chVoisinsSortants.get(parSource).size()) {
-                    indice = i;
+                else if (parComparateur == 2) {
+                    int voisinsActuel = chVoisinsSortants.get(parSources.get(indice)).size();
+                    int voisinsCandidate = chVoisinsSortants.get(parSources.get(i)).size();
+                    if (voisinsCandidate > voisinsActuel) {
+                        indice = i;
+                    } else if (voisinsCandidate == voisinsActuel) {
+                        if (chDistances.get(sourceVille).get(villeCandidate) < chDistances.get(sourceVille).get(villeActuelle)) {
+                            indice = i;
+                        }
+                    }
                 }
             }
         }
