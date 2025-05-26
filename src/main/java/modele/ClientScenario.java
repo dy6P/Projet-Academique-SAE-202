@@ -23,13 +23,14 @@ public class ClientScenario {
                 correspondances.put(nomsListes[i], liste);
                 reader.close();
             }
-            Scenario s0 = new Scenario();
+            Scenario s0 = new Scenario("Velizy");
             s0.ajouterVilles(correspondances.get("distances"));
             s0.ajouterDistances();
             s0.ajouterUtilisateurs(correspondances.get("membres"));
-            s0.ajouterCommandes(correspondances.get("s0"));
+            s0.ajouterCommandes(correspondances.get("s8"));
+            s0.trouverChemins();
+            s0.cheminsNet();
             System.out.println(s0);
-            s0.trouverChemins("Velizy");
         } catch (FileNotFoundException parException) {
             System.out.println("Erreur lors de la lecture du fichier text.");
             parException.printStackTrace();

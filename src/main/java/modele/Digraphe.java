@@ -13,10 +13,10 @@ public class Digraphe {
         chDepart = parDepart;
     }
 
-    public int calculerDistance(ArrayList<String> parTriTopologique) {
+    public int calculerDistance(ArrayList<String> parChemin) {
         int distance = 0;
-        for (int i = 0; i < parTriTopologique.size() - 1; i++) {
-            distance += chDistances.get(parTriTopologique.get(i).split(" ")[0]).get(parTriTopologique.get(i + 1).split(" ")[0]);
+        for (int i = 0; i < parChemin.size() - 1; i++) {
+            distance += chDistances.get(parChemin.get(i).split(" ")[0]).get(parChemin.get(i + 1).split(" ")[0]);
         }
         return distance;
     }
@@ -61,11 +61,19 @@ public class Digraphe {
         return triTopologique;
     }
 
-    public ArrayList<ArrayList<String>> Solutions() {
-        ArrayList<ArrayList<String>> solutions = new ArrayList<>();
+    public TreeMap<Integer, ArrayList<String>> Solutions() {
+        TreeMap<Integer, ArrayList<String>> solutions = new TreeMap<>();
         int[] comparateurs = {0, 1, 2};
+        boolean doublon = false;
         for (int comparateur : comparateurs) {
-            solutions.add(triTopologique(chDepart, comparateur));
+            doublon = false;
+            ArrayList<String> solution = triTopologique(chDepart, comparateur);
+            if (!solutions.isEmpty() && solutions.containsValue(solution)) {
+                doublon = true;
+            }
+            if (!doublon) {
+                solutions.put(calculerDistance(solution), solution);
+            }
         }
         return solutions;
     }
@@ -87,17 +95,10 @@ public class Digraphe {
     }
 
     public String toString() {
-        StringBuilder resultat = new StringBuilder("CHEMIN :");
-        String precedent = "";
-        ArrayList<String> triTopologique = triTopologique(chDepart, 2);
-        for (String tache : triTopologique) {
-            tache = tache.split(" ")[0];
-            if (!tache.equals(precedent)) {
-                resultat.append(" -> ").append(tache);
-            }
-            precedent = tache;
+        StringBuilder resultat = new StringBuilder("Digraphe : \n");
+        for (String ville : chVoisinsSortants.keySet()) {
+            resultat.append("- ").append(ville).append(" -> ").append(chVoisinsSortants.get(ville)).append("\n");
         }
-        resultat.append("\nDISTANCE : ").append(calculerDistance(triTopologique)).append(" km");
         return resultat.toString();
     }
 }

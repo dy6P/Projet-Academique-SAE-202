@@ -7,12 +7,19 @@ public class Scenario {
     private TreeMap<String, Ville> chVilles;
     private HashSet<Commande> chCommandes;
     private TreeMap<String, TreeMap<String, Integer>> chDistances;
+    private TreeMap<Integer, ArrayList<String>> cheminsBrut;
+    private TreeMap<Integer, ArrayList<String>> cheminsNet;
+    private Digraphe chDigraphe;
+    private String chDepart;
 
-    public Scenario() {
+    public Scenario(String parDepart) {
         chUtilisateurs = new TreeMap<>();
         chVilles = new TreeMap<>();
         chCommandes = new HashSet<>();
         chDistances = new TreeMap<>();
+        cheminsBrut = new TreeMap<>();
+        cheminsNet = new TreeMap<>();
+        chDepart = parDepart;
     }
 
     public void ajouterUtilisateurs(ArrayList<String> parListe) {
@@ -49,13 +56,13 @@ public class Scenario {
         }
     }
 
-    public void trouverChemins(String parDepart) {
+    public void trouverChemins() {
         ArrayList<String> chemin = new ArrayList<>();
         TreeMap<String, TreeSet<String>> voisinsSortants = new TreeMap<>();
-        voisinsSortants.put(parDepart + " - ", new TreeSet<>());
-        voisinsSortants.put(parDepart + " + ", new TreeSet<>());
+        voisinsSortants.put(chDepart + " - ", new TreeSet<>());
+        voisinsSortants.put(chDepart + " + ", new TreeSet<>());
         for (Commande commande : chCommandes) {
-            if (!commande.getChVendeur().getChVille().getChNom().equals(parDepart) && !commande.getChAcheteur().getChVille().getChNom().equals(parDepart)) {
+            if (!commande.getChVendeur().getChVille().getChNom().equals(chDepart) && !commande.getChAcheteur().getChVille().getChNom().equals(chDepart)) {
                 String villeVente = commande.getChVendeur().getChVille().getChNom() + " + ";
                 String villeAchat = commande.getChAcheteur().getChVille().getChNom() + " - ";
                 if (!voisinsSortants.containsKey(villeVente)) {
@@ -65,15 +72,29 @@ public class Scenario {
                     voisinsSortants.put(villeAchat, new TreeSet<>());
                 }
                 voisinsSortants.get(villeVente).add(villeAchat);
-                voisinsSortants.get(villeAchat).add(parDepart + " - ");
-                voisinsSortants.get(parDepart + " + ").add(villeVente);
+                voisinsSortants.get(villeAchat).add(chDepart + " - ");
+                voisinsSortants.get(chDepart + " + ").add(villeVente);
             }
         }
-        Digraphe d = new Digraphe(voisinsSortants, chDistances, parDepart);
-        System.out.println(d);
+        chDigraphe = new Digraphe(voisinsSortants, chDistances, chDepart);
+        cheminsBrut = chDigraphe.Solutions();
+    }
+
+    public void cheminsNet() {
+        for (int distance : cheminsBrut.keySet()) {
+            cheminsNet.put(distance, new ArrayList<>());
+            for (int ville = 0; ville < cheminsBrut.get(distance).size(); ville++) {
+                if (ville > 0 && !cheminsBrut.get(distance).get(ville).split(" ")[0].equals(cheminsBrut.get(distance).get(ville - 1).split(" ")[0])) {
+                    cheminsNet.get(distance).add(cheminsBrut.get(distance).get(ville).split(" ")[0]);
+                }
+            }
+            cheminsNet.get(distance).addFirst(chDepart);
+        }
     }
 
     public String toString() {
+        System.out.println(cheminsBrut);
+        System.out.println(cheminsNet);
         String resultat = "Utilisateurs :\n";
         for (Utilisateur utilisateur : chUtilisateurs.values()) {
             resultat += "- " + utilisateur.toString() + "\n";
@@ -88,6 +109,20 @@ public class Scenario {
         resultat += "Commandes :\n";
         for (Commande commande : chCommandes) {
             resultat += "- " + commande.toString() + "\n";
+        }
+        resultat += "\n" + chDigraphe.toString();
+        int i = 1;
+        for (int distance : cheminsBrut.keySet()) {
+            resultat += "\n" + "SOLUTION " + i + " :\n" + "CHEMIN_BRUT =";
+            for (String ville : cheminsBrut.get(distance)) {
+                resultat += " -> " + ville;
+            }
+            resultat += "\nCHEMIN_NET =";
+            for (String ville : cheminsNet.get(distance)) {
+                resultat += " -> " + ville;
+            }
+            resultat += "\nDISTANCE = " + distance + " KM\n";
+            i ++;
         }
         return resultat;
     }
