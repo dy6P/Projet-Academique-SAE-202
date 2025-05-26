@@ -70,7 +70,6 @@ public class Scenario {
             }
         }
         Digraphe d = new Digraphe(voisinsSortants, chDistances, parDepart);
-        d.triTopologique(parDepart);
         System.out.println(d);
     }
 
