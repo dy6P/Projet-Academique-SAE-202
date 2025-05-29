@@ -60,16 +60,14 @@ public class Digraphe {
 
     public TreeMap<Integer, ArrayList<String>> Solutions() {
         TreeMap<Integer, ArrayList<String>> solutions = new TreeMap<>();
-        int[] comparateurs = {0, 1};
-        boolean doublon = false;
-        for (int comparateur : comparateurs) {
-            doublon = false;
+        for (int comparateur : new int[]{0, 1}) {
             ArrayList<String> solution = triTopologique(chDepart, comparateur);
-            if (!solutions.isEmpty() && solutions.containsValue(solution)) {
-                doublon = true;
-            }
-            if (!doublon) {
-                solutions.put(calculerDistance(solution), solution);
+            int distance = calculerDistance(solution);
+            if (!solutions.containsValue(solution)) {
+                while (solutions.containsKey(distance)) {
+                    distance++;
+                }
+                solutions.put(distance, solution);
             }
         }
         return solutions;
