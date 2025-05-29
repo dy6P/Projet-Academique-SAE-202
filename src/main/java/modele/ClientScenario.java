@@ -23,7 +23,7 @@ public class ClientScenario {
                 correspondances.put(nomsListes[i], liste);
                 reader.close();
             }
-            Scenario s0 = new Scenario("Velizy");
+            Scenario s0 = new Scenario("Velizy", 100);
             s0.ajouterVilles(correspondances.get("distances"));
             s0.ajouterDistances();
             s0.ajouterUtilisateurs(correspondances.get("membres"));

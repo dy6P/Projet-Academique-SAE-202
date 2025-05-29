@@ -82,13 +82,13 @@ public class Digraphe {
         return parChemins;
     }
 
-    public TreeMap<Integer, ArrayList<String>> solutions() {
+    public TreeMap<Integer, ArrayList<String>> solutions(int parK) {
         TreeMap<Integer, ArrayList<String>> solutions = new TreeMap<>();
         ArrayList<ArrayList<String>> candidats = new ArrayList<>();
         for (int comparateur : new int[] {0, 1}) {
             candidats.add(triTopologique(chDepart, comparateur));
         }
-        candidats.addAll(kSolutions(100, chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>()));
+        candidats.addAll(kSolutions(parK, chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>()));
         for (ArrayList<String> solution : candidats) {
             if (!solutions.containsValue(solution)) {
                 solutions.put(calculerDistance(solution), solution);

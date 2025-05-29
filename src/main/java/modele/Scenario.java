@@ -11,8 +11,9 @@ public class Scenario {
     private TreeMap<Integer, ArrayList<String>> cheminsNet;
     private Digraphe chDigraphe;
     private String chDepart;
+    private int chK;
 
-    public Scenario(String parDepart) {
+    public Scenario(String parDepart, int parK) {
         chUtilisateurs = new TreeMap<>();
         chVilles = new TreeMap<>();
         chCommandes = new HashSet<>();
@@ -20,6 +21,7 @@ public class Scenario {
         cheminsBrut = new TreeMap<>();
         cheminsNet = new TreeMap<>();
         chDepart = parDepart;
+        chK = parK;
     }
 
     public void ajouterUtilisateurs(ArrayList<String> parListe) {
@@ -77,7 +79,7 @@ public class Scenario {
             }
         }
         chDigraphe = new Digraphe(voisinsSortants, chDistances, chDepart);
-        cheminsBrut = chDigraphe.solutions();
+        cheminsBrut = chDigraphe.solutions(chK);
     }
 
     public void cheminsNet() {
