@@ -93,19 +93,7 @@ public class Scenario {
     }
 
     public String toString() {
-        System.out.println(cheminsBrut);
-        System.out.println(cheminsNet);
-        String resultat = "Utilisateurs :\n";
-        for (Utilisateur utilisateur : chUtilisateurs.values()) {
-            resultat += "- " + utilisateur.toString() + "\n";
-        }
-        resultat += "Villes :\n";
-        for (Ville ville : chVilles.values()) {
-            for (Ville v : ville.getChDistances().keySet()) {
-                resultat += "- " + ville.getChNom() + " est à une distance de " + ville.getChDistances().get(v) + " km de " + v.getChNom() + "\n";
-            }
-        }
-        resultat += "\n";
+        String resultat = "\n";
         resultat += "Commandes :\n";
         for (Commande commande : chCommandes) {
             resultat += "- " + commande.toString() + "\n";
