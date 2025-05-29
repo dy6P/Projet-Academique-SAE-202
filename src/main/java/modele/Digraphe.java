@@ -34,17 +34,6 @@ public class Digraphe {
                 else if (parComparateur == 1 && chDistances.get(sourceVille).get(villeCandidate) < chDistances.get(sourceVille).get(villeActuelle)) {
                     indice = i;
                 }
-                else if (parComparateur == 2) {
-                    int voisinsActuel = chVoisinsSortants.get(parSources.get(indice)).size();
-                    int voisinsCandidate = chVoisinsSortants.get(parSources.get(i)).size();
-                    if (voisinsCandidate > voisinsActuel) {
-                        indice = i;
-                    } else if (voisinsCandidate == voisinsActuel) {
-                        if (chDistances.get(sourceVille).get(villeCandidate) < chDistances.get(sourceVille).get(villeActuelle)) {
-                            indice = i;
-                        }
-                    }
-                }
             }
         }
         return indice;
@@ -71,7 +60,7 @@ public class Digraphe {
 
     public TreeMap<Integer, ArrayList<String>> Solutions() {
         TreeMap<Integer, ArrayList<String>> solutions = new TreeMap<>();
-        int[] comparateurs = {0, 1, 2};
+        int[] comparateurs = {0, 1};
         boolean doublon = false;
         for (int comparateur : comparateurs) {
             doublon = false;
