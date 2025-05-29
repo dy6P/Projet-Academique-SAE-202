@@ -77,7 +77,7 @@ public class Scenario {
             }
         }
         chDigraphe = new Digraphe(voisinsSortants, chDistances, chDepart);
-        cheminsBrut = chDigraphe.Solutions();
+        cheminsBrut = chDigraphe.solutions();
     }
 
     public void cheminsNet() {

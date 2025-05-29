@@ -42,7 +42,7 @@ public class Digraphe {
     public ArrayList<String> triTopologique(String parDepart, int parComparateur) {
         ArrayList<String> triTopologique = new ArrayList<>();
         ArrayList<String> sources = new ArrayList<>();
-        TreeMap<String, Integer> degresEntrants = DegresEntrants();
+        TreeMap<String, Integer> degresEntrants = degresEntrants();
         sources.add(parDepart + " + ");
         String source = null;
         while (!sources.isEmpty()) {
@@ -58,12 +58,37 @@ public class Digraphe {
         return triTopologique;
     }
 
-    public TreeMap<Integer, ArrayList<String>> Solutions() {
+    public ArrayList<ArrayList<String>> kSolutions(int parK, String parCourant, ArrayList<ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources) {
+        if (parChemins.size() >= parK) {
+            return parChemins;
+        }
+        parChemin.add(parCourant);
+        if (parCourant.split(" ")[0].equals(chDepart) && parCourant.split(" ")[1].equals("-")) {
+            parChemins.add(new ArrayList<>(parChemin));
+            return parChemins;
+        }
+        for (String voisin : chVoisinsSortants.get(parCourant)) {
+            parDegresEntrants.put(voisin, parDegresEntrants.get(voisin) - 1);
+            if (parDegresEntrants.get(voisin) == 0 && !parSources.contains(voisin)) {
+                parSources.add(voisin);
+            }
+        }
+        for (int i = 0; i < parSources.size(); i++) {
+            ArrayList<String> newSources = new ArrayList<>(parSources);
+            //String newCourant = newSources.remove(extraireSource(parCourant, newSources, 1));
+            String newCourant = newSources.remove(i);
+            kSolutions(parK, newCourant, parChemins, new ArrayList<>(parChemin), new TreeMap<>(parDegresEntrants), newSources);
+        }
+        return parChemins;
+    }
+
+    public TreeMap<Integer, ArrayList<String>> solutions() {
         TreeMap<Integer, ArrayList<String>> solutions = new TreeMap<>();
         ArrayList<ArrayList<String>> candidats = new ArrayList<>();
         for (int comparateur : new int[] {0, 1}) {
             candidats.add(triTopologique(chDepart, comparateur));
         }
+        candidats.addAll(kSolutions(100, chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>()));
         for (ArrayList<String> solution : candidats) {
             if (!solutions.containsValue(solution)) {
                 solutions.put(calculerDistance(solution), solution);
@@ -72,7 +97,7 @@ public class Digraphe {
         return solutions;
     }
 
-    public TreeMap<String, Integer> DegresEntrants() {
+    public TreeMap<String, Integer> degresEntrants() {
         TreeMap<String, Integer> degresEntrants = new TreeMap<>();
         for (String ville : chVoisinsSortants.keySet()) {
             int compteur = 0;
