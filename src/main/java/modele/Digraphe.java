@@ -58,13 +58,10 @@ public class Digraphe {
         return triTopologique;
     }
 
-    public ArrayList<ArrayList<String>> kSolutions(int parK, String parCourant, ArrayList<ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources) {
-        if (parChemins.size() >= parK) {
-            return parChemins;
-        }
+    public TreeMap<Integer, ArrayList<String>> kSolutions(String parCourant, TreeMap<Integer, ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources) {
         parChemin.add(parCourant);
         if (parCourant.split(" ")[0].equals(chDepart) && parCourant.split(" ")[1].equals("-")) {
-            parChemins.add(new ArrayList<>(parChemin));
+            parChemins.put(calculerDistance(parChemin), new ArrayList<>(parChemin));
             return parChemins;
         }
         for (String voisin : chVoisinsSortants.get(parCourant)) {
@@ -75,23 +72,28 @@ public class Digraphe {
         }
         for (int i = 0; i < parSources.size(); i++) {
             ArrayList<String> newSources = new ArrayList<>(parSources);
-            //String newCourant = newSources.remove(extraireSource(parCourant, newSources, 1));
             String newCourant = newSources.remove(i);
-            kSolutions(parK, newCourant, parChemins, new ArrayList<>(parChemin), new TreeMap<>(parDegresEntrants), newSources);
+            kSolutions(newCourant, parChemins, new ArrayList<>(parChemin), new TreeMap<>(parDegresEntrants), newSources);
         }
         return parChemins;
     }
 
     public TreeMap<Integer, ArrayList<String>> solutions(int parK) {
         TreeMap<Integer, ArrayList<String>> solutions = new TreeMap<>();
-        ArrayList<ArrayList<String>> candidats = new ArrayList<>();
+        TreeMap<Integer, ArrayList<String>> candidats = new TreeMap<>();
         for (int comparateur : new int[] {0, 1}) {
-            candidats.add(triTopologique(chDepart, comparateur));
+            ArrayList<String> chemin = triTopologique(chDepart, comparateur);
+            candidats.put(calculerDistance(chemin), chemin);
         }
-        candidats.addAll(kSolutions(parK, chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>()));
-        for (ArrayList<String> solution : candidats) {
+        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>());
+        int i = 0;
+        for (ArrayList<String> solution : candidats.values()) {
             if (!solutions.containsValue(solution)) {
                 solutions.put(calculerDistance(solution), solution);
+                i ++;
+            }
+            if (i >= parK) {
+                break;
             }
         }
         return solutions;
