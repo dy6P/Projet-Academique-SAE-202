@@ -60,14 +60,23 @@ public class Digraphe {
         return triTopologique;
     }
 
-    public TreeMap<Integer, ArrayList<String>> kSolutions(String parCourant, TreeMap<Integer, ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources, int parDistanceCourante) {
+    public TreeMap<Integer, ArrayList<String>> kSolutions(
+            String parCourant,
+            TreeMap<Integer, ArrayList<String>> parChemins,
+            ArrayList<String> parChemin,
+            TreeMap<String, Integer> parDegresEntrants,
+            ArrayList<String> parSources,
+            int parDistanceCourante
+    ) {
+
         parChemin.add(parCourant);
-        if ((parDistanceCourante >= chSeuilKSolutions)) {
+        if (parDistanceCourante >= chSeuilKSolutions) {
             return parChemins;
         }
-        if (parCourant.split(" ")[0].equals(chDepart) && parCourant.split(" ")[1].equals("-")) {
+        if (parChemin.size() == chVoisinsSortants.size()) {
             parChemins.put(parDistanceCourante, new ArrayList<>(parChemin));
             chSeuilKSolutions = parDistanceCourante;
+            return parChemins;
         }
         for (String voisin : chVoisinsSortants.get(parCourant)) {
             parDegresEntrants.put(voisin, parDegresEntrants.get(voisin) - 1);
@@ -79,8 +88,17 @@ public class Digraphe {
             ArrayList<String> newSources = new ArrayList<>(parSources);
             String newCourant = newSources.remove(i);
             int distanceAjoutee = chDistances.get(parCourant.split(" ")[0]).get(newCourant.split(" ")[0]);
-            kSolutions(newCourant, parChemins, new ArrayList<>(parChemin), new TreeMap<>(parDegresEntrants), newSources, parDistanceCourante + distanceAjoutee);
+
+            kSolutions(
+                    newCourant,
+                    parChemins,
+                    new ArrayList<>(parChemin),
+                    new TreeMap<>(parDegresEntrants),
+                    newSources,
+                    parDistanceCourante + distanceAjoutee
+            );
         }
+
         return parChemins;
     }
 
