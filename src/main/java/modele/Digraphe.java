@@ -65,7 +65,6 @@ public class Digraphe {
         }
         if (parCourant.split(" ")[0].equals(chDepart) && parCourant.split(" ")[1].equals("-")) {
             parChemins.put(parDistanceCourante, new ArrayList<>(parChemin));
-            return parChemins;
         }
         for (String voisin : chVoisinsSortants.get(parCourant)) {
             parDegresEntrants.put(voisin, parDegresEntrants.get(voisin) - 1);
@@ -77,8 +76,7 @@ public class Digraphe {
             ArrayList<String> newSources = new ArrayList<>(parSources);
             String newCourant = newSources.remove(i);
             int distanceAjoutee = chDistances.get(parCourant.split(" ")[0]).get(newCourant.split(" ")[0]);
-            ArrayList<String> newChemin = new ArrayList<>(parChemin);
-            kSolutions(newCourant, parChemins, newChemin, new TreeMap<>(parDegresEntrants), newSources, parSeuil, parDistanceCourante + distanceAjoutee);
+            kSolutions(newCourant, parChemins, new ArrayList<>(parChemin), new TreeMap<>(parDegresEntrants), newSources, parSeuil, parDistanceCourante + distanceAjoutee);
         }
         return parChemins;
     }
