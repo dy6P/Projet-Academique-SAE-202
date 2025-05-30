@@ -7,7 +7,7 @@ public class Digraphe {
     private TreeMap<String, TreeMap<String,Integer>> chDistances;
     private String chDepart;
     private int chSeuilKSolutions = 0;
-    private int chLimiteRecursion = 0;
+    private int chRecursions = 0;
 
     public Digraphe(TreeMap<String, TreeSet<String>> parVoisinsSortants, TreeMap<String, TreeMap<String,Integer>> parDistances, String parDepart) {
         chVoisinsSortants = parVoisinsSortants;
@@ -67,17 +67,16 @@ public class Digraphe {
             TreeMap<String, Integer> parDegresEntrants,
             ArrayList<String> parSources,
             int parDistanceCourante,
-            int parRecursion,
             int parK
     ) {
         parChemin.add(parCourant);
-        if (parDistanceCourante >= chSeuilKSolutions || parRecursion >= parK) {
+        if (parDistanceCourante >= chSeuilKSolutions || chRecursions >= parK) {
             return parChemins;
         }
         if (parChemin.size() == chVoisinsSortants.size()) {
             parChemins.put(parDistanceCourante, new ArrayList<>(parChemin));
             chSeuilKSolutions = parDistanceCourante;
-            parRecursion ++;
+            chRecursions ++;
             return parChemins;
         }
         String sourceDistanceZero = null;
@@ -102,7 +101,6 @@ public class Digraphe {
                     new TreeMap<>(parDegresEntrants),
                     newSources,
                     parDistanceCourante,
-                    parRecursion,
                     parK
             );
         }
@@ -119,7 +117,6 @@ public class Digraphe {
                         new TreeMap<>(parDegresEntrants),
                         newSources,
                         parDistanceCourante + distanceAjoutee,
-                        parRecursion,
                         parK
                 );
             }
@@ -135,7 +132,7 @@ public class Digraphe {
             candidats.put(calculerDistance(chemin), chemin);
         }
         chSeuilKSolutions = candidats.firstKey();
-        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>(), 0, 0, parK);
+        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>(), 0, parK);
         int i = 0;
         for (ArrayList<String> solution : candidats.values()) {
             if (!solutions.containsValue(solution)) {
