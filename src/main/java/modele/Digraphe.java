@@ -78,27 +78,46 @@ public class Digraphe {
             chSeuilKSolutions = parDistanceCourante;
             return parChemins;
         }
+        String sourceDistanceZero = null;
         for (String voisin : chVoisinsSortants.get(parCourant)) {
             parDegresEntrants.put(voisin, parDegresEntrants.get(voisin) - 1);
             if (parDegresEntrants.get(voisin) == 0 && !parSources.contains(voisin)) {
                 parSources.add(voisin);
+                int distance = chDistances.get(parCourant.split(" ")[0]).get(voisin.split(" ")[0]);
+                if (distance == 0) {
+                    sourceDistanceZero = voisin;
+                }
             }
         }
-        for (int i = 0; i < parSources.size(); i++) {
+        if (sourceDistanceZero != null) {
             ArrayList<String> newSources = new ArrayList<>(parSources);
-            String newCourant = newSources.remove(i);
-            int distanceAjoutee = chDistances.get(parCourant.split(" ")[0]).get(newCourant.split(" ")[0]);
+            newSources.remove(sourceDistanceZero);
 
             kSolutions(
-                    newCourant,
+                    sourceDistanceZero,
                     parChemins,
                     new ArrayList<>(parChemin),
                     new TreeMap<>(parDegresEntrants),
                     newSources,
-                    parDistanceCourante + distanceAjoutee
+                    parDistanceCourante
             );
         }
+        else {
+            for (int i = 0; i < parSources.size(); i++) {
+                ArrayList<String> newSources = new ArrayList<>(parSources);
+                String newCourant = newSources.remove(i);
+                int distanceAjoutee = chDistances.get(parCourant.split(" ")[0]).get(newCourant.split(" ")[0]);
 
+                kSolutions(
+                        newCourant,
+                        parChemins,
+                        new ArrayList<>(parChemin),
+                        new TreeMap<>(parDegresEntrants),
+                        newSources,
+                        parDistanceCourante + distanceAjoutee
+                );
+            }
+        }
         return parChemins;
     }
 
