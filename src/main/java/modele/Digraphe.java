@@ -6,13 +6,13 @@ public class Digraphe {
     private TreeMap<String, TreeSet<String>> chVoisinsSortants;
     private TreeMap<String, TreeMap<String,Integer>> chDistances;
     private String chDepart;
-    private int chSeuilKSolutions;
+    private int chSeuilKSolutions = 0;
+    private int chLimiteRecursion = 0;
 
     public Digraphe(TreeMap<String, TreeSet<String>> parVoisinsSortants, TreeMap<String, TreeMap<String,Integer>> parDistances, String parDepart) {
         chVoisinsSortants = parVoisinsSortants;
         chDistances = parDistances;
         chDepart = parDepart;
-        chSeuilKSolutions = 0;
     }
 
     public int calculerDistance(ArrayList<String> parChemin) {
@@ -66,16 +66,18 @@ public class Digraphe {
             ArrayList<String> parChemin,
             TreeMap<String, Integer> parDegresEntrants,
             ArrayList<String> parSources,
-            int parDistanceCourante
+            int parDistanceCourante,
+            int parRecursion,
+            int parK
     ) {
-
         parChemin.add(parCourant);
-        if (parDistanceCourante >= chSeuilKSolutions) {
+        if (parDistanceCourante >= chSeuilKSolutions || parRecursion >= parK) {
             return parChemins;
         }
         if (parChemin.size() == chVoisinsSortants.size()) {
             parChemins.put(parDistanceCourante, new ArrayList<>(parChemin));
             chSeuilKSolutions = parDistanceCourante;
+            parRecursion ++;
             return parChemins;
         }
         String sourceDistanceZero = null;
@@ -99,7 +101,9 @@ public class Digraphe {
                     new ArrayList<>(parChemin),
                     new TreeMap<>(parDegresEntrants),
                     newSources,
-                    parDistanceCourante
+                    parDistanceCourante,
+                    parRecursion,
+                    parK
             );
         }
         else {
@@ -114,7 +118,9 @@ public class Digraphe {
                         new ArrayList<>(parChemin),
                         new TreeMap<>(parDegresEntrants),
                         newSources,
-                        parDistanceCourante + distanceAjoutee
+                        parDistanceCourante + distanceAjoutee,
+                        parRecursion,
+                        parK
                 );
             }
         }
@@ -129,7 +135,7 @@ public class Digraphe {
             candidats.put(calculerDistance(chemin), chemin);
         }
         chSeuilKSolutions = candidats.firstKey();
-        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>(), 0);
+        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>(), 0, 0, parK);
         int i = 0;
         for (ArrayList<String> solution : candidats.values()) {
             if (!solutions.containsValue(solution)) {
