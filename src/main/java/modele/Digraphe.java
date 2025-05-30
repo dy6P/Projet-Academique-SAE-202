@@ -6,11 +6,13 @@ public class Digraphe {
     private TreeMap<String, TreeSet<String>> chVoisinsSortants;
     private TreeMap<String, TreeMap<String,Integer>> chDistances;
     private String chDepart;
+    private int chSeuilKSolutions;
 
     public Digraphe(TreeMap<String, TreeSet<String>> parVoisinsSortants, TreeMap<String, TreeMap<String,Integer>> parDistances, String parDepart) {
         chVoisinsSortants = parVoisinsSortants;
         chDistances = parDistances;
         chDepart = parDepart;
+        chSeuilKSolutions = 0;
     }
 
     public int calculerDistance(ArrayList<String> parChemin) {
@@ -58,14 +60,14 @@ public class Digraphe {
         return triTopologique;
     }
 
-    public TreeMap<Integer, ArrayList<String>> kSolutions(String parCourant, TreeMap<Integer, ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources, int parSeuil, int parDistanceCourante) {
+    public TreeMap<Integer, ArrayList<String>> kSolutions(String parCourant, TreeMap<Integer, ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources, int parDistanceCourante) {
         parChemin.add(parCourant);
-        if ((parDistanceCourante >= parSeuil)) {
+        if ((parDistanceCourante >= chSeuilKSolutions)) {
             return parChemins;
         }
         if (parCourant.split(" ")[0].equals(chDepart) && parCourant.split(" ")[1].equals("-")) {
             parChemins.put(parDistanceCourante, new ArrayList<>(parChemin));
-            parSeuil = parDistanceCourante;
+            chSeuilKSolutions = parDistanceCourante;
         }
         for (String voisin : chVoisinsSortants.get(parCourant)) {
             parDegresEntrants.put(voisin, parDegresEntrants.get(voisin) - 1);
@@ -77,7 +79,7 @@ public class Digraphe {
             ArrayList<String> newSources = new ArrayList<>(parSources);
             String newCourant = newSources.remove(i);
             int distanceAjoutee = chDistances.get(parCourant.split(" ")[0]).get(newCourant.split(" ")[0]);
-            kSolutions(newCourant, parChemins, new ArrayList<>(parChemin), new TreeMap<>(parDegresEntrants), newSources, parSeuil, parDistanceCourante + distanceAjoutee);
+            kSolutions(newCourant, parChemins, new ArrayList<>(parChemin), new TreeMap<>(parDegresEntrants), newSources, parDistanceCourante + distanceAjoutee);
         }
         return parChemins;
     }
@@ -89,7 +91,8 @@ public class Digraphe {
             ArrayList<String> chemin = triTopologique(chDepart, comparateur);
             candidats.put(calculerDistance(chemin), chemin);
         }
-        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>(), candidats.firstKey(), 0);
+        chSeuilKSolutions = candidats.firstKey();
+        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>(), 0);
         int i = 0;
         for (ArrayList<String> solution : candidats.values()) {
             if (!solutions.containsValue(solution)) {
