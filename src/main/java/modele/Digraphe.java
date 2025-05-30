@@ -60,11 +60,12 @@ public class Digraphe {
 
     public TreeMap<Integer, ArrayList<String>> kSolutions(String parCourant, TreeMap<Integer, ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources, int parSeuil, int parDistanceCourante) {
         parChemin.add(parCourant);
-        if ((parDistanceCourante > parSeuil)) {
+        if ((parDistanceCourante >= parSeuil)) {
             return parChemins;
         }
         if (parCourant.split(" ")[0].equals(chDepart) && parCourant.split(" ")[1].equals("-")) {
             parChemins.put(parDistanceCourante, new ArrayList<>(parChemin));
+            parSeuil = parDistanceCourante;
         }
         for (String voisin : chVoisinsSortants.get(parCourant)) {
             parDegresEntrants.put(voisin, parDegresEntrants.get(voisin) - 1);
