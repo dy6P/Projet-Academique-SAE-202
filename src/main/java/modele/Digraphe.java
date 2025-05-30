@@ -58,9 +58,9 @@ public class Digraphe {
         return triTopologique;
     }
 
-    public TreeMap<Integer, ArrayList<String>> kSolutions(String parCourant, TreeMap<Integer, ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources, int parSeuil, int parDistanceCourante, int parMaxVoisins) {
+    public TreeMap<Integer, ArrayList<String>> kSolutions(String parCourant, TreeMap<Integer, ArrayList<String>> parChemins, ArrayList<String> parChemin, TreeMap<String, Integer> parDegresEntrants, ArrayList<String> parSources, int parSeuil, int parDistanceCourante) {
         parChemin.add(parCourant);
-        if ((parDistanceCourante > parSeuil) || (chVoisinsSortants.get(parCourant).size() < parMaxVoisins)) {
+        if ((parDistanceCourante > parSeuil)) {
             return parChemins;
         }
         if (parCourant.split(" ")[0].equals(chDepart) && parCourant.split(" ")[1].equals("-")) {
@@ -78,7 +78,7 @@ public class Digraphe {
             String newCourant = newSources.remove(i);
             int distanceAjoutee = chDistances.get(parCourant.split(" ")[0]).get(newCourant.split(" ")[0]);
             ArrayList<String> newChemin = new ArrayList<>(parChemin);
-            kSolutions(newCourant, parChemins, newChemin, new TreeMap<>(parDegresEntrants), newSources, parSeuil, parDistanceCourante + distanceAjoutee, calculMaxVoisinsSortants(newChemin));
+            kSolutions(newCourant, parChemins, newChemin, new TreeMap<>(parDegresEntrants), newSources, parSeuil, parDistanceCourante + distanceAjoutee);
         }
         return parChemins;
     }
@@ -90,7 +90,7 @@ public class Digraphe {
             ArrayList<String> chemin = triTopologique(chDepart, comparateur);
             candidats.put(calculerDistance(chemin), chemin);
         }
-        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>(), candidats.firstKey(), 0, 0);
+        candidats = kSolutions( chDepart + " + ", candidats, new ArrayList<>(), degresEntrants(), new ArrayList<>(), candidats.firstKey(), 0);
         int i = 0;
         for (ArrayList<String> solution : candidats.values()) {
             if (!solutions.containsValue(solution)) {
@@ -102,17 +102,6 @@ public class Digraphe {
             }
         }
         return solutions;
-    }
-
-    public int calculMaxVoisinsSortants(ArrayList<String> parVillesVisites) {
-        int maxVoisins = 0;
-        for (String ville : chVoisinsSortants.keySet()) {
-            int voisins = chVoisinsSortants.get(ville).size();
-            if (voisins > maxVoisins && !parVillesVisites.contains(ville)) {
-                maxVoisins = voisins;
-            }
-        }
-        return maxVoisins;
     }
 
     public TreeMap<String, Integer> degresEntrants() {
